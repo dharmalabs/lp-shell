@@ -1,0 +1,18 @@
+This is a quick prototype of a command line shell for Liquid Planner:
+http://www.liquidplanner.com/
+
+using their REST API:
+http://www.liquidplanner.com/api-guide
+
+It doesn't do much at this point other than:
+- view your account information
+- view tasks
+- view comments
+- view workspaces
+
+A pickle file (.lp.pkl) is stored in $HOME. It's not encrypted in anyway
+but is chmod'd 600. This file holds a username, password and
+workspace id and can be changed with the 'a' command. If the file doesn't
+exist, it will be created prompting for the username and password. To set
+the active workspace, use the 'w' command.
+
