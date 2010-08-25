@@ -63,7 +63,6 @@ def cmd_a_view(args):
 def cmd_a_switch(args):
   write_config(args.username, args.password)
 
-2015208
 def cmd_t_view(args):
   config = read_config()
   if args.id:
