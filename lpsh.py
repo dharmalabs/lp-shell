@@ -72,12 +72,12 @@ def cmd_t_view(args):
     print response['name']
     print response['description']
 
-    # bug in LP API... returns HTML instead of JSON
-    """
     if response['has_note']:
       uri = base_url() + '/workspaces/%s/tasks/%s/note' % (config['wid'], args.id)
-      print response
-    """
+      response = get_response(uri)
+      print response['note']
+
+
   else:
     uri = base_url() + '/workspaces/%s/tasks?filter=owner_id%%20=%%20me&limit=10' % config['wid']
     response = get_response(uri)
@@ -137,7 +137,7 @@ def get_response(uri):
     headers = {
       'Authorization': 'Basic %s' % (u + ':' + p).encode('base64').rstrip(),
       'Content-Type': 'application/json',
-      'Accept': '*/*',
+      'Accept': 'application/json',
       'User-Agent': 'lpsh.py/0.1',
     },
   )
