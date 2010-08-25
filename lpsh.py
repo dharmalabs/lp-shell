@@ -63,11 +63,27 @@ def cmd_a_view(args):
 def cmd_a_switch(args):
   write_config(args.username, args.password)
 
+2015208
 def cmd_t_view(args):
   config = read_config()
-  uri = base_url() + '/workspaces/%s/tasks' % config['wid']
-  print get_response(uri)
-  #pp(get_response(uri))
+  if args.id:
+    uri = base_url() + '/workspaces/%s/tasks/%s' % (config['wid'], args.id)
+    response = get_response(uri)
+    print response['id']
+    print response['name']
+    print response['description']
+
+    # bug in LP API... returns HTML instead of JSON
+    """
+    if response['has_note']:
+      uri = base_url() + '/workspaces/%s/tasks/%s/note' % (config['wid'], args.id)
+      print response
+    """
+  else:
+    uri = base_url() + '/workspaces/%s/tasks?filter=owner_id%%20=%%20me&limit=10' % config['wid']
+    response = get_response(uri)
+    for item in response:
+      print "%s : %s" % (item['id'], item['name'])
 
 def cmd_tl_view(args):
   config = read_config()
@@ -123,7 +139,7 @@ def get_response(uri):
       'Authorization': 'Basic %s' % (u + ':' + p).encode('base64').rstrip(),
       'Content-Type': 'application/json',
       'Accept': '*/*',
-      'User-Agent': 'lp.py/0.1',
+      'User-Agent': 'lpsh.py/0.1',
     },
   )
   f = urllib2.urlopen(req)
@@ -153,7 +169,7 @@ def main(argv):
   # tasks
   t_group = subparsers.add_parser('t', help='task(s)')
   t_subparsers = t_group.add_subparsers()
-  t_group_view = t_subparsers.add_parser('view', help='view tasks')
+  t_group_view = t_subparsers.add_parser('view', help='view upcoming tasks')
   t_group_view.add_argument('id', nargs='?')
   t_group_view.set_defaults(func=cmd_t_view)
 
